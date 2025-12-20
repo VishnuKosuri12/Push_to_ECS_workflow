@@ -22,11 +22,20 @@ jobs:
       - name: Say Hello to third workflow
         env:
           ENV3: " ### step *level* env ###"
-        run: echo "Using env -> {{ env.ENV1}}. @@ $ENV2. @@@ $ENV3"
+        run: echo "Using env -> ${{ env.ENV1}}. @@ $ENV2. @@@ $ENV3"
 
       - name: multi line script
         run: |
-         echo "This is {{ env.ENV2 }} and {{ env.ENV1 }} "
+         echo "This is ${{ env.ENV2 }} and ${{ env.ENV1 }} "
          echo "This is line 2"
          echo "This is @@ $ENV3. @@@ "
+
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event details
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "Event details: ${{ toJson(github.event) }}"
 
