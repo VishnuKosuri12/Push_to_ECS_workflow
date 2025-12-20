@@ -1,0 +1,52 @@
+name: second workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say Hello to first workflow
+        run: echo "Hello, World! from Akhilesh Bootcamp"
+
+      - name: multi line script
+        run: |
+         echo "This is line 1"
+         echo "This is line 2"
+         echo "This is line 3"
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say Hello from job2
+        run: echo "Hello from Job 2 in first workflow"
+
+      - name: sleep for 10 seconds
+        run: sleep 10
+
+      - name: Say Goodbye from job2
+        run: echo "Goodbye from Job 2 in first workflow"
+
+  job3:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Say Hello from job3
+        run: echo "Hello from Job 3 in first workflow"
+
+         
+
+
