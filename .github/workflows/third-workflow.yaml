@@ -39,3 +39,29 @@ jobs:
           echo "Event: ${{ github.event_name }}"
           echo "Event details: ${{ toJson(github.event) }}"
 
+
+job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event details
+    run: |
+      EVENT="${{ github.event_name }}"
+      echo "Event: $EVENT"
+      case $EVENT in
+        workflow_dispatch)
+          echo "Trigger: Manual workflow dispatch"
+          ;;
+        schedule)
+          echo "Trigger: Scheduled (cron)"
+          ;;
+        push)
+          echo "Trigger: Code push"
+          ;;
+        pull_request)
+          echo "Trigger: Pull request"
+          ;;
+        *)
+          echo "Trigger: $EVENT"
+          ;;
+      esac
+
