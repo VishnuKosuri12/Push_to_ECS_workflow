@@ -1,0 +1,54 @@
+name: build push ad
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: 'Path to the application'
+        required: false
+        default: './app'
+      tag:
+        description: 'Docker image tag'
+        required: false
+        default: 'latest'
+
+      ecr_repo:
+        description: 'ECR Repository name'
+        required: false
+        default: 'nov25-class5'
+
+env:
+  ecr_repo: ${{ github.event.inputs.ecr_repo }}
+  aws_region: ap-south-1
+  path: ${{ github.event.inputs.path }}
+  tag: ${{ github.event.inputs.tag }}
+
+
+jobs:
+  image-build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.aws_region }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+# image : registry/repo_name:tag
+# image : {879381241087.dkr.ecr.ap-south-1.amazonaws.com}/{nov25-class5}:{latest}
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ecr_registry: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          cd ${{ env.path }}
+          docker build -t ${{ env.ecr_registry }}/${{ env.ecr_repo }}:${{ env.tag }} .
+          docker push ${{ env.ecr_registry }}/${{ env.ecr_repo }}:${{ env.tag }}
