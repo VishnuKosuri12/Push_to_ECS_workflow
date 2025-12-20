@@ -1,4 +1,4 @@
-name: first workflow
+name: second workflow
 
 on:
   - push 
@@ -20,6 +20,6 @@ jobs:
          echo "This is line 2"
          echo "This is line 3"
 
-         
+
 
 
