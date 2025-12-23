@@ -38,3 +38,4 @@ jobs:
         run: |
           echo "Event: ${{ github.event_name }}"
           echo "Event details: ${{ toJson(github.event) }}"
+          echo "Repository: ${{ github.repository }}"
