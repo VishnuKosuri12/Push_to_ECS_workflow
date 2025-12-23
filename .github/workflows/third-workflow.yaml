@@ -3,33 +3,28 @@ name: third manual run workflow
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 20 * * 6'  # Runs sat 8pm ist
+    - cron: '0 20 * * 6' # Runs sat 8pm ist
 
-# you can declare env variables in 3 levels: workflow, job, step
 env:
-  ENV1: " ### workflow *level* env var ###"
+  ENV1: " ### workflow level env var ###"
 
-jobs:  
+jobs:
   job1:
     runs-on: ubuntu-latest
     env:
-      ENV2: " ### job *level* env ###"
-
+      ENV2: " ### job level env ###"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Say Hello to third workflow
         env:
-          ENV3: " ### step *level* env ###"
+          ENV3: " ### step level env ###"
         run: echo "Using env -> ${{ env.ENV1}}. @@ $ENV2. @@@ $ENV3"
-
       - name: multi line script
         run: |
-         echo "This is ${{ env.ENV2 }} and ${{ env.ENV1 }} "
-         echo "This is line 2"
-         echo "This is @@ $ENV3. @@@ "
-
+          echo "This is ${{ env.ENV2 }} and ${{ env.ENV1 }} "
+          echo "This is line 2"
+          echo "This is @@ $ENV3. @@@ "
 
   job2:
     runs-on: ubuntu-latest
@@ -38,4 +33,28 @@ jobs:
         run: |
           echo "Event: ${{ github.event_name }}"
           echo "Event details: ${{ toJson(github.event) }}"
-          echo "Repository: ${{ github.repository }}"
+
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event details
+        run: |
+          EVENT="${{ github.event_name }}"
+          echo "Event: $EVENT"
+          case $EVENT in
+            workflow_dispatch)
+              echo "Trigger: Manual workflow dispatch"
+              ;;
+            schedule)
+              echo "Trigger: Scheduled (cron)"
+              ;;
+            push)
+              echo "Trigger: Code push"
+              ;;
+            pull_request)
+              echo "Trigger: Pull request"
+              ;;
+            *)
+              echo "Trigger: $EVENT"
+              ;;
+          esac
