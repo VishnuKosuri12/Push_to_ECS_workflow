@@ -20,7 +20,7 @@ on:
 
 env:
   ecr_repo: ${{ github.event.inputs.ecr_repo }}
-  aws_region: ap-south-1
+  aws_region: us-east-2
   path: ${{ github.event.inputs.path }}
   tag: ${{ github.event.inputs.tag }}
 
